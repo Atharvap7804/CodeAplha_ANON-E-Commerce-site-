@@ -16,7 +16,7 @@ const register = async (req, res) => {
     res.status(201).json({
       message: "Registration successful",
       user: {
-        id: user._id, // include user ID here
+        _id: user._id, 
         name: user.name,
         email: user.email
       }
@@ -40,7 +40,7 @@ const login = async (req, res) => {
 
     res.json({
       user: {
-        id: user._id, // include user ID here too
+        _id: user._id,
         name: user.name,
         email: user.email
       }

@@ -15,10 +15,9 @@
       <ul id="navbar">
         <li><a href="index.html">Home</a></li>
         <li><a class="active" href="shop.html">Shop</a></li>
-        <li><a href="blog.html">Blog</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="contact.html">Contact</a></li>
-        <li id="lg-bag"><a href="cart.html"></a><i class="fa-solid fa-cart-shopping"></i></li>
+        <li id="lg-bag"><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
         <a href="#" id="close"><i class="fa-solid fa-xmark"></i></a>
       </ul>
     </div>
@@ -64,7 +63,7 @@
       <input type="number" value="1">
       <button class="normal"  onclick="addToCart()"">Add To Cart</button>
       <h4>Product Details</h4>
-      <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita, recusandae suscipit non minima atque beatae dolor a maiores libero, qui odit tempora. Dignissimos error eligendi magnam quaerat aliquam officiis, natus iure maxime at ex.</span>
+      <span>Our premium T-shirt is crafted from 100% soft cotton, offering comfort and style for every occasion. Designed for durability and a perfect fit, it's a must-have for your wardrobe. Enjoy breathable fabric and vibrant prints that last wash after wash.</span>
      </div>
 
     
@@ -243,36 +242,47 @@
       if (signinBtn) signinBtn.style.display = "block";
       if (logoutBtn) logoutBtn.style.display = "none";
     }
+
+    // Load selected product if present
+    const selected = localStorage.getItem('selectedProduct');
+    if (selected) {
+      const product = JSON.parse(selected);
+      if (product.img) document.getElementById('MainImg').src = product.img;
+      if (product.name) document.querySelector('.single-pro-details h4').textContent = product.name;
+      if (product.price) document.querySelector('.single-pro-details h2').textContent = product.price;
+      // Optionally set brand, etc. if you add those fields
+    }
   });
   function addToCart() {
-    // Get product details
-    const productName = document.querySelector('h4').textContent;
-    const productPrice = document.querySelector('h2').textContent;
-    // Grab the _relative_ path rather than the full .src URL
-const productImage = document.getElementById('MainImg').getAttribute('src');
+  // Get product details
+  const productName = document.querySelector('.single-pro-details h4').textContent;
+  let productPrice = document.querySelector('.single-pro-details h2').textContent;
+  // Remove currency and convert to number
+  productPrice = parseInt(productPrice.replace(/[^0-9]/g, ''));
+  const productImg = document.getElementById('MainImg').getAttribute('src');
+  const productSize = document.querySelector('.single-pro-details select').value;
+  const productQuantity = parseInt(document.querySelector('.single-pro-details input[type="number"]').value);
 
-    const productSize = document.querySelector('select').value;
-    const productQuantity = document.querySelector('input[type="number"]').value;
+  // Build product object with consistent keys for cart rendering
+  const product = {
+    name: productName,
+    price: productPrice,
+    img: productImg, // use 'img' instead of 'image'
+    size: productSize,
+    quantity: productQuantity
+  };
 
-    const product = {
-      name: productName,
-      price: productPrice,
-      image: productImage,
-      size: productSize,
-      quantity: productQuantity
-    };
+  // Get cart from localStorage, or create a new one if it's empty
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // Get cart from localStorage, or create a new one if it's empty
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  // Add the product to the cart array
+  cart.push(product);
 
-    // Add the product to the cart array
-    cart.push(product);
+  // Save the updated cart back to localStorage
+  localStorage.setItem("cart", JSON.stringify(cart));
 
-    // Save the updated cart back to localStorage
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert("Product added to cart!");
-  }
+  alert("Product added to cart!");
+}
 </script>
 
 </body>

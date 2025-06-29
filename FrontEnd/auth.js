@@ -75,13 +75,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const data = await res.json();
 
-    if (res.ok && data.user) {
+    if (res.ok && data.user && data.user._id) {
       alert("✅ Login successful");
       localStorage.setItem("anon_user", JSON.stringify(data.user));
       signinFormData.reset();
       authModal.style.display = "none";
       updateNavbarUI(true);
       updateCartCount();
+      window.location.href = "/dashboard.html"; // Redirect to dashboard after login
     } else {
       alert("❌ " + (data.message || "Login failed"));
     }
@@ -108,7 +109,7 @@ function updateNavbarUI(isLoggedIn) {
     const username = user?.name || "User";
 
     navbarAuth.innerHTML = `
-      <span>Welcome, ${username}</span>
+
       <button id="logoutBtn">Logout</button>
     `;
 
